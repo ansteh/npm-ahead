@@ -1,0 +1,29 @@
+{
+  "name": "npm-ahead",
+  "version": "0.0.0",
+  "description": "Autocomplete web service featuring typeahead.js and npm registry search by keyword REST API",
+  "main": "index.js",
+  "scripts": {
+    "test": "node dev.js"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ansteh/npm-ahead.git"
+  },
+  "keywords": [
+    "npm search",
+    "typeahead.js"
+  ],
+  "author": "Andre Stehle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ansteh/npm-ahead/issues"
+  },
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {}
+}

@@ -10,24 +10,47 @@ const registry = require('npm-stats')();
 
 //console.log(registry.keyword('shape').list());
 
-function getModulesByKeyword(keyword){
-  let stream = registry.keyword(keyword).list();
+const getModulesByKeyword = (keyword) => {
+  return new Promise((resolve, reject) => {
+    let stream = registry.keyword(keyword).list();
 
-  let body = "";
+    let body = "";
 
-  stream.on('data', (chunk) => {
-    body += chunk;
-  });
+    stream.on('data', (chunk) => {
+      body += chunk;
+    });
 
-  stream.on('end', () => {
-    let data;
-    try {
-      data = JSON.parse(body);
-    } catch (err) {
-      console.log(err);
-    }
-    console.log(data);
+    stream.on('end', () => {
+      try {
+        resolve(JSON.parse(body));
+      } catch (err) {
+        reject(err);
+      }
+    });
   });
 };
 
-getModulesByKeyword('scheme');
+getModulesByKeyword('scheme')
+.then(function(data){
+  console.log(data.length);
+});
+
+/*const getModulesByKeyword = (keyword) => {
+  return new Promise((resolve, reject) => {
+    let stream = registry.keyword(keyword).list();
+
+    let body = "";
+
+    stream.on('data', (chunk) => {
+      body += chunk;
+    });
+
+    stream.on('end', () => {
+      try {
+        resolve(JSON.parse(body));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  });
+};*/

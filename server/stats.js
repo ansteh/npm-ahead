@@ -11,10 +11,8 @@ const registry = require('npm-stats')();
 
 //console.log(registry.keyword('shape').list());
 
-const getModulesByKeyword = (keyword) => {
+const promisify = (stream) => {
   return new Promise((resolve, reject) => {
-    let stream = registry.keyword(keyword).list();
-
     let body = "";
 
     stream.on('data', (chunk) => {
@@ -29,6 +27,10 @@ const getModulesByKeyword = (keyword) => {
       }
     });
   });
+};
+
+const getModulesByKeyword = (keyword) => {
+  return promisify(registry.keyword(keyword).list());
 };
 
 /*getModulesByKeyword('scheme')
@@ -37,23 +39,7 @@ const getModulesByKeyword = (keyword) => {
 });*/
 
 const getModulesList = () => {
-  return new Promise((resolve, reject) => {
-    let stream = registry.list();
-
-    let body = "";
-
-    stream.on('data', (chunk) => {
-      body += chunk;
-    });
-
-    stream.on('end', () => {
-      try {
-        resolve(JSON.parse(body));
-      } catch (err) {
-        reject(err);
-      }
-    });
-  });
+  return promisify(registry.list());
 };
 
 /*getModulesList()
@@ -61,28 +47,55 @@ const getModulesList = () => {
   console.log(data.length);
 });*/
 
-const stringStreamForEach = () => {
-  let stream = registry.list();
+const getModulueInfo = (name) => {
+  return promisify(registry.module(name).info());
+};
 
-  let body = "";
+/*getModulueInfo('shape-json')
+.then(function(info){
+  console.log(info);
+});*/
 
-  let part = "";
+const getModulueDownloads = (name) => {
+  return promisify(registry.module(name).downloads());
+};
 
+/*getModulueDownloads('shape-json')
+.then(function(downloads){
+  console.log(downloads);
+});*/
+
+const stringStreamForEach = (stream, each) => {
   stream.on('data', (chunk) => {
-    console.log(chunk);
-    if(chunk === "'"){
-      console.log('here');
-    }
-    body += chunk;
-  });
-
-  stream.on('end', () => {
-    try {
-      console.log(JSON.parse(body));
-    } catch (err) {
-      console.log(err);
+    let tokens = _.split(chunk, '"');
+    if(tokens.length === 3){
+      each(tokens[1]);
     }
   });
 };
 
-stringStreamForEach();
+const fs = require('fs');
+const writeJson = (pathname, json) => {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(pathname, JSON.stringify(json), (err) => {
+      if(err) reject(err);
+      resolve();
+    });
+  });
+};
+
+function saveListAsJSON(){
+  return getModulesList()
+  //return getModulesByKeyword('scheme')
+  .then(function(names){
+    return writeJson('./list.json', names);
+  })
+  .then(function(){
+    console.log('saved as json!');
+  })
+  .catch(function(err){
+    console.log(err);
+  });
+};
+
+//saveListAsJSON();

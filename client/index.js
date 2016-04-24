@@ -1,5 +1,5 @@
 (function(document, jQuery){
-  jQuery.getJSON('https://registry.npmjs.org/-/_view/byKeyword?startkey=["shape"]&endkey=["shape",{}]&group_level=3', function(res){
+  jQuery.getJSON('/search?q=shape', function(res){
     console.log(res);
   });
 
@@ -8,7 +8,7 @@
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     identify: function(obj) { console.log(obj); return obj.word; },
     remote: {
-      url: 'https://registry.npmjs.org/-/_view/byKeyword?startkey=["%QUERY"]&endkey=["%QUERY",{}]&group_level=3',
+      url: '/search?q=%QUERY',
       wildcard: '%QUERY'
     }
   });
@@ -20,7 +20,7 @@
       highlight: true,
       minLength: 2
     }, {
-      name: 'suggestions',
+      name: 'package-suggestions',
       display: 'value',
       source: source,
       limit: 9,
@@ -38,6 +38,5 @@
       //console.log('Selection: ', suggestion);
     });
   });
-
 
 }(document, jQuery));

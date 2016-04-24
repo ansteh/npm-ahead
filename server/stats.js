@@ -84,6 +84,15 @@ const writeJson = (pathname, json) => {
   });
 };
 
+const getAuthorList = (name) => {
+  return promisify(registry.user(name).list());
+};
+
+/*getAuthorList('ansteh')
+.then(function(modules){
+  console.log(modules);
+});*/
+
 function saveListAsJSON(){
   return getModulesList()
   //return getModulesByKeyword('scheme')

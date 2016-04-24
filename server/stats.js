@@ -1,4 +1,5 @@
 'use strict';
+const _        = require('lodash');
 const registry = require('npm-stats')();
 
 /*registry.module('lodash').info(function (err, lodash) {
@@ -30,14 +31,14 @@ const getModulesByKeyword = (keyword) => {
   });
 };
 
-getModulesByKeyword('scheme')
+/*getModulesByKeyword('scheme')
 .then(function(data){
   console.log(data.length);
-});
+});*/
 
-/*const getModulesByKeyword = (keyword) => {
+const getModulesList = () => {
   return new Promise((resolve, reject) => {
-    let stream = registry.keyword(keyword).list();
+    let stream = registry.list();
 
     let body = "";
 
@@ -53,4 +54,35 @@ getModulesByKeyword('scheme')
       }
     });
   });
-};*/
+};
+
+/*getModulesList()
+.then(function(data){
+  console.log(data.length);
+});*/
+
+const stringStreamForEach = () => {
+  let stream = registry.list();
+
+  let body = "";
+
+  let part = "";
+
+  stream.on('data', (chunk) => {
+    console.log(chunk);
+    if(chunk === "'"){
+      console.log('here');
+    }
+    body += chunk;
+  });
+
+  stream.on('end', () => {
+    try {
+      console.log(JSON.parse(body));
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
+stringStreamForEach();

@@ -23,7 +23,8 @@
     "url": "https://github.com/ansteh/npm-ahead/issues"
   },
   "dependencies": {
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "lodash": "^4.11.1"
   },
   "devDependencies": {}
 }
